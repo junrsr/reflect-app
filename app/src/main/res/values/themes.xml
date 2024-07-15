@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Reflect" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.Reflect" parent="Theme.MaterialComponents.NoActionBar">
+<!--        <item name="colorPrimary">@color/background</item>-->
+<!--        <item name="colorPrimaryVariant">@color/shaded</item>-->
     </style>
 
     <style name="Theme.Reflect" parent="Base.Theme.Reflect" />
