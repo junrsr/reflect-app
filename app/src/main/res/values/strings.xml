@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">reflect</string>
+    <string name="sleep_text">Last night\nMy sleep was excellent</string>
 </resources>
