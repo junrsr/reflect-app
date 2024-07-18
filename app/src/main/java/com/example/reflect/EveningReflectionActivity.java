@@ -1,6 +1,8 @@
 package com.example.reflect;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -10,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EveningReflectionActivity extends AppCompatActivity {
@@ -31,9 +34,6 @@ public class EveningReflectionActivity extends AppCompatActivity {
 
         // initialise all component values
         initValues();
-
-        TextView t = findViewById(R.id.textView2);
-        t.setText(date.toString());
 
     }
 

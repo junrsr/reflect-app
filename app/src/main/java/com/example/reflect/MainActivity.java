@@ -21,6 +21,15 @@ public class MainActivity extends AppCompatActivity {
     private CardView eveningCardView; // the cardview for evening reflection
 
 
+    /**
+     * initialise all component values
+     * set the card listeners for relevant components
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // standard onCreate functionality
@@ -46,14 +55,18 @@ public class MainActivity extends AppCompatActivity {
      * initialises all component values
      */
     private void initValues(){
-        // calendar
+        // initialise the calendar to current day
         calendar = Calendar.getInstance();
 
-        // different tabs
+        // initialise the different card views within the project
         morningCardView = findViewById(R.id.morningReflectionCard);
         eveningCardView = findViewById(R.id.eveningReflectionCard);
     }
 
+    /**
+     * handles card view activity once pressed
+     * brings up the morning / evening / journal activities
+     */
     private void setCardViewListeners(){
         // morning card view
         morningCardView.setOnClickListener(new View.OnClickListener() {
