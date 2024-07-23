@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,8 @@ public class EveningReflectionActivity extends AppCompatActivity {
         // initialise all component values
         initValues();
 
+        showDatabase();
+
     }
 
     /**
@@ -49,5 +52,27 @@ public class EveningReflectionActivity extends AppCompatActivity {
             // retrieve the date from the intent
             date = (Date) intent.getSerializableExtra("date");
         }
+    }
+
+    private void showDatabase(){
+        DatabaseHelper databaseHelper = new DatabaseHelper(EveningReflectionActivity.this);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+
+        Cursor results = database.query(Utils.MORNING_REFLECTION_TABLE, new String[] {"date", "motivationScore", "sleepScore"}, null, null, null, null, null);
+        results.moveToFirst();
+
+        String str = "";
+
+        for (int i = 0; i < results.getCount(); i++){
+            long dateLong = results.getLong(0);
+            Date date1 = new Date(dateLong);
+            str += "date: " + date1.toString() + "| motivationScore: " + results.getInt(1) + "| sleepScore: " + results.getInt(2) + "\n";
+
+            results.moveToNext();
+        }
+
+        TextView tv = findViewById(R.id.textView2);
+        tv.setText(str);
+
     }
 }

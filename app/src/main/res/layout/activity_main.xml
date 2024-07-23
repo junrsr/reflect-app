@@ -101,6 +101,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:id="@+id/morningCardLayoutUnfilled"
             android:padding="15dp">
 
             <androidx.constraintlayout.widget.Guideline
@@ -123,7 +124,7 @@
                 android:textColor="@color/white"
                 android:textSize="30sp"
                 android:fontFamily="@font/inter_bold"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/morningCardSubheading"
@@ -146,6 +147,50 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mCardImageGuideline"
                 android:src="@drawable/ic_sun" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:id="@+id/morningCardLayoutCompleted"
+            android:padding="15dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/mCardGuidelineCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.55" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/mCardGuidelineCompleted"
+                android:text="Morning Reflection Completed"
+                android:textAlignment="center"
+                android:textColor="@color/shaded"
+                android:textSize="28sp"
+                android:fontFamily="@font/inter_bold"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/morningCardScoreText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/mCardGuidelineCompleted"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="Motivation: 4/5 \nSleep: 4/5"
+                android:fontFamily="@font/inter"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -118,6 +118,7 @@ public class MorningReflectionActivity extends AppCompatActivity {
             // retrieve the date from the intent
             date = (Date) intent.getSerializableExtra("date");
         }
+
 
         // initialise necessary components
         // slider + descriptors

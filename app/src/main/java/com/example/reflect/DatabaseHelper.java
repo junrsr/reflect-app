@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     // variable used to denote the version of the database. Manually increase on database changes.
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     /**
      * creating a new instance of the database in a particular context
@@ -29,8 +29,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create the morning reflection table
         String morningTableStatement = "CREATE TABLE " + Utils.MORNING_REFLECTION_TABLE +  " (id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, sleepScore INTEGER, motivationScore INTEGER)"; // TODO: add additional field for goals
         db.execSQL(morningTableStatement);
-
-
     }
 
     /**
