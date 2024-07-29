@@ -270,6 +270,7 @@
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:id="@+id/journalCardView"
         app:layout_constraintTop_toTopOf="@id/reflectionGuideline"
         app:layout_constraintBottom_toBottomOf="@id/navbarGuideline"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Calendar calendar; // used to store the day the user is currently on
     private CardView morningCardView; // the cardview for morning reflection
     private CardView eveningCardView; // the cardview for evening reflection
+    private CardView journalCardView; // the cardview for journaling
 
     private DatabaseHelper databaseHelper; // the database used to store reflection and journal details
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         // initialise the different card views within the project
         morningCardView = findViewById(R.id.morningReflectionCard);
         eveningCardView = findViewById(R.id.eveningReflectionCard);
+        journalCardView = findViewById(R.id.journalCardView);
 
         // initialise the database
         databaseHelper = new DatabaseHelper(MainActivity.this);
@@ -109,6 +111,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         // journal card view
+        journalCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to the morning reflection page
+                Intent intent = new Intent(MainActivity.this, JournalActivity.class);
+                intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
+                startActivity(intent); // move to the new activity
+            }
+        });
     }
 
     private void setUICards(){
@@ -119,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor morningResults = database.query(Utils.MORNING_REFLECTION_TABLE, new String[] {"sleepScore", "motivationScore"}, "date = ?", new String[] {"" + calendar.getTime().getTime()}, null, null, null);
 
         // if we have existing entries
-        if (morningResults != null){
+        if (morningResults.getCount() != 0){
             // navigate to the first element
             morningResults.moveToFirst();
 

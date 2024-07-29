@@ -8,4 +8,10 @@
     <color name="tab">#252525</color>
     <color name="tabAlt">#1c1c1c</color>
     <color name="title">#f2f2f7</color>
+
+    <color name="emotionAwful">#c93420</color>
+    <color name="emotionBad">#eead60</color>
+    <color name="emotionNeutral">#5aa7ee</color>
+    <color name="emotionGood">#a2ea6a</color>
+    <color name="emotionGreat">#009b19</color>
 </resources>

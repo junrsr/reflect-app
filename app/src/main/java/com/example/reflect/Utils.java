@@ -5,5 +5,6 @@ package com.example.reflect;
  */
 public class Utils {
     public static final String DATABASE_NAME = "reflectDatabase"; // the name of the database
+    public static final String JOURNAL_TABLE = "journalTable"; // name of the journal table
     public static final String MORNING_REFLECTION_TABLE = "morningReflectionTable"; // the name of the morning reflection tables
 }
