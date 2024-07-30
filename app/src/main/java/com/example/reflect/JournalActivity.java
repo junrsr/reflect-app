@@ -1,6 +1,9 @@
 package com.example.reflect;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -147,9 +150,27 @@ public class JournalActivity extends AppCompatActivity {
                     journalTitle = journalTitleInput.getText().toString();
                     journalContent = journalContentInput.getText().toString();
 
+                    // if all validation passes
                     if (validateInput()){
-                        // TODO:  add to database
-                        Toast.makeText(JournalActivity.this, moodScore + "\n" + journalTitle + "\n" + journalContent, Toast.LENGTH_SHORT).show();
+                        // get a reference to the database
+                        DatabaseHelper databaseHelper = new DatabaseHelper(JournalActivity.this);
+                        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+
+                        // create a new ContentValues object to store pairs and values
+                        ContentValues values = new ContentValues();
+
+                        // add field names and corresponding values for new record to the ContentValues object
+                        values.put("moodScore", moodScore);
+                        values.put("title", journalTitle);
+                        values.put("content", journalContent);
+                        values.put( "date", date.getTime()); // convert the date into long format to be stored -- convert back to date on retrieval
+
+                        // insert the new record into the relevant database
+                        database.insert(Utils.JOURNAL_TABLE, null, values);
+
+                        // navigate back to the homepage
+                        Intent intent = new Intent(JournalActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
 
                 }

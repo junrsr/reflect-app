@@ -58,7 +58,7 @@ public class EveningReflectionActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(EveningReflectionActivity.this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
-        Cursor results = database.query(Utils.MORNING_REFLECTION_TABLE, new String[] {"date", "motivationScore", "sleepScore"}, null, null, null, null, null);
+        Cursor results = database.query(Utils.JOURNAL_TABLE, new String[] {"date", "moodScore", "title", "content"}, null, null, null, null, null);
         results.moveToFirst();
 
         String str = "";
@@ -66,7 +66,7 @@ public class EveningReflectionActivity extends AppCompatActivity {
         for (int i = 0; i < results.getCount(); i++){
             long dateLong = results.getLong(0);
             Date date1 = new Date(dateLong);
-            str += "date: " + date1.toString() + "| motivationScore: " + results.getInt(1) + "| sleepScore: " + results.getInt(2) + "\n";
+            str += "date: " + date1.toString() + "| moodScore: " + results.getInt(1) + "\n" + results.getString(2) + "\n" + results.getString(3);
 
             results.moveToNext();
         }
