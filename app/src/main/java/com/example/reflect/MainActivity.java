@@ -1,11 +1,13 @@
 package com.example.reflect;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private CardView morningCardView; // the cardview for morning reflection
     private CardView eveningCardView; // the cardview for evening reflection
     private CardView journalCardView; // the cardview for journaling
+
+    TextView dateView; // ui component which displays currently selected date
 
     private DatabaseHelper databaseHelper; // the database used to store reflection and journal details
 
@@ -54,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
         // initialise all component values
         initValues();
 
-        // handles morning, evening and reflection tab functionality when pressed
+        // handles date, morning, evening and reflection tab functionality when pressed
         setCardViewListeners();
+        setDateListener();
 
         // display recorded reflection / journal logs from previous entries if it already exists
         setUICards();
@@ -78,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         morningCardView = findViewById(R.id.morningReflectionCard);
         eveningCardView = findViewById(R.id.eveningReflectionCard);
         journalCardView = findViewById(R.id.journalCardView);
+
+        // find the UI component currently storing the date
+        dateView = findViewById(R.id.dateView);
+        dateView.setText(getDateString(calendar.getTime()));
 
         // initialise the database
         databaseHelper = new DatabaseHelper(MainActivity.this);
@@ -123,6 +132,42 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * allows the user to modify the date they are currently viewing
+     */
+    private void setDateListener(){
+        // add an event listener to the date view
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // bring up a new event dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        MainActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int day) {
+
+                                // adjust the day, month and year
+                                calendar.set(Calendar.DAY_OF_MONTH, day);
+                                calendar.set(Calendar.MONTH, month);
+                                calendar.set(Calendar.YEAR, year);
+
+                                // adjust the UI text
+                                String date = getDateString(calendar.getTime());
+                                dateView.setText(date);
+
+                                // reset the ui cards for this new date
+                                setUICards();
+                            }
+                        },
+                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                datePickerDialog.show();
+            }
+        });
+    }
+
     /**
      * helper method which updates the UI components if an entry has been made
      */
@@ -149,6 +194,16 @@ public class MainActivity extends AppCompatActivity {
             // update the morning card
             updateMorningCard(sleepScore, motivationScore);
         }
+        // otherwise if there are no entries for that date
+        else{
+            // store references to ui layouts
+            ConstraintLayout morningLayoutUnfilled = findViewById(R.id.morningCardLayoutUnfilled);
+            ConstraintLayout morningLayoutCompleted = findViewById(R.id.morningCardLayoutCompleted);
+
+            // hide the layout component for the completed morning card
+            morningLayoutUnfilled.setVisibility(View.VISIBLE);
+            morningLayoutCompleted.setVisibility(View.INVISIBLE);
+        }
 
         // close the cursor
         morningResults.close();
@@ -173,6 +228,16 @@ public class MainActivity extends AppCompatActivity {
             // update the morning card
             updateJournal(moodScore, content);
         }
+        // otherwise if there are no entries for that date
+        else{
+            // show the layout component for an uncompleted journal entry
+            ConstraintLayout journalLayoutUnfilled = findViewById(R.id.journalLayoutUnfilled);
+            journalLayoutUnfilled.setVisibility(View.VISIBLE);
+
+            // hide the layout component for a completed journal entry
+            ConstraintLayout journalLayoutFilled = findViewById(R.id.journalLayoutFilled);
+            journalLayoutFilled.setVisibility(View.INVISIBLE);
+        }
 
         // close the cursor
         journalResults.close();
@@ -188,12 +253,12 @@ public class MainActivity extends AppCompatActivity {
      * @param motivationScore how motivated the user is feeling (1 - 5)
      */
     private void updateMorningCard(int sleepScore, int motivationScore){
-        // hide the layout components for the unfilled morning card
+        // store references to ui layouts
         ConstraintLayout morningLayoutUnfilled = findViewById(R.id.morningCardLayoutUnfilled);
-        morningLayoutUnfilled.setVisibility(View.INVISIBLE);
+        ConstraintLayout morningLayoutCompleted = findViewById(R.id.morningCardLayoutCompleted);
 
         // show the layout component for the completed morning card
-        ConstraintLayout morningLayoutCompleted = findViewById(R.id.morningCardLayoutCompleted);
+        morningLayoutUnfilled.setVisibility(View.INVISIBLE);
         morningLayoutCompleted.setVisibility(View.VISIBLE);
 
         // find the text view used to store all text
@@ -297,10 +362,8 @@ public class MainActivity extends AppCompatActivity {
             dateOfMonth = "0" + dateOfMonth;
         }
 
-        // convert that date into a string
-        String dateText = dayString[date.getDay()] + ", " + dateOfMonth + " " + monthString[date.getMonth()];
-
-        return dateText;
+        // return that date converted into a string
+        return dayString[date.getDay()] + ", " + dateOfMonth + " " + monthString[date.getMonth()];
     }
 
 
