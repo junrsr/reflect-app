@@ -3,6 +3,7 @@ package com.example.reflect;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -122,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * helper method which updates the UI components if an entry has been made
+     */
     private void setUICards(){
         // get a writable instance of the database so we can read / write data
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
@@ -150,6 +154,29 @@ public class MainActivity extends AppCompatActivity {
         morningResults.close();
 
 
+        // queries the journal table to collect the content and mood for entries with matching dates
+        Cursor journalResults = database.query(Utils.JOURNAL_TABLE, new String[] {"moodScore", "content"}, "date = ?", new String[] {"" + calendar.getTime().getTime()}, null, null, null);
+
+        // if we have existing entries
+        if (journalResults.getCount() != 0){
+            // navigate to the first element
+            journalResults.moveToFirst();
+
+            // get the column indexes for the entry
+            int moodColumn = journalResults.getColumnIndex("moodScore");
+            int contentColumn = journalResults.getColumnIndex("content");
+
+            // get the relevant scores
+            int moodScore = journalResults.getInt(moodColumn);
+            String content = journalResults.getString(contentColumn);
+
+            // update the morning card
+            updateJournal(moodScore, content);
+        }
+
+        // close the cursor
+        journalResults.close();
+
         // close the database
         database.close();
 
@@ -177,5 +204,104 @@ public class MainActivity extends AppCompatActivity {
         scoreText.setText(displayText);
 
     }
+
+    /**
+     * appropriately displays and fills the journal content if the user has already made an entry for the specified day
+     *
+     * @param moodScore a constant integer which denotes how the user felt on a given day
+     * @param content a string value which holds the journal content
+     */
+    private void updateJournal(final int moodScore, String content){
+        // hide the layout component for an uncompleted journal entry
+        ConstraintLayout journalLayoutUnfilled = findViewById(R.id.journalLayoutUnfilled);
+        journalLayoutUnfilled.setVisibility(View.INVISIBLE);
+
+        // show the layout component for a completed journal entry
+        ConstraintLayout journalLayoutFilled = findViewById(R.id.journalLayoutFilled);
+        journalLayoutFilled.setVisibility(View.VISIBLE);
+
+        // find the relevant UI components
+        TextView contentTextView = findViewById(R.id.journalContent);
+        TextView moodTextView = findViewById(R.id.moodText);
+        TextView journalDateTextView = findViewById(R.id.journalDateText);
+        ImageView journalImageView = findViewById(R.id.journalMoodImage);
+
+        // adjust the mood image and text based on the given mood score
+        switch (moodScore){
+            case 1:
+                // adjust the text and color of the mood text
+                moodTextView.setText("awful");
+                moodTextView.setTextColor(getResources().getColor(R.color.emotionAwful));
+
+                // display the very upset icon
+                journalImageView.setImageResource(R.drawable.ic_very_sad);
+                break;
+            case 2:
+                // adjust the text and color of the mood text
+                moodTextView.setText("bad");
+                moodTextView.setTextColor(getResources().getColor(R.color.emotionBad));
+
+                // display the sad icon
+                journalImageView.setImageResource(R.drawable.ic_sad);
+                break;
+            case 3:
+                // adjust the text and color of the mood text
+                moodTextView.setText("meh");
+                moodTextView.setTextColor(getResources().getColor(R.color.emotionNeutral));
+
+                // display the neutral face icon
+                journalImageView.setImageResource(R.drawable.ic_neutral);
+                break;
+            case 4:
+                // adjust the text and color of the mood text
+                moodTextView.setText("good");
+                moodTextView.setTextColor(getResources().getColor(R.color.emotionGood));
+
+                // display the happy icon
+                journalImageView.setImageResource(R.drawable.ic_happy);
+                break;
+            case 5:
+                // adjust the text and color of the mood text
+                moodTextView.setText("amazing");
+                moodTextView.setTextColor(getResources().getColor(R.color.emotionGreat));
+
+                // display the very happy icon
+                journalImageView.setImageResource(R.drawable.ic_very_happy);
+                break;
+        }
+
+        // display the journal content
+        contentTextView.setText(content);
+
+        // convert the current date into ideal string format
+        String dateText = getDateString(calendar.getTime());
+
+        // display the date
+        journalDateTextView.setText(dateText);
+
+    }
+
+    /**
+     * method which takes in a date and converts it into the following format: DAYOFWEEK, XX MONTH
+     * @param date the date we want to convert into a string
+     * @return the date in string format
+     */
+    private String getDateString(Date date){
+        // get a list of days of the week
+        String[] dayString = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+        String[] monthString = {"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
+
+        // calculate the date of the month, adding a 0 if necessary to get it to two digits
+        String dateOfMonth = "" + date.getDate();
+        if (dateOfMonth.length() == 1){
+            dateOfMonth = "0" + dateOfMonth;
+        }
+
+        // convert that date into a string
+        String dateText = dayString[date.getDay()] + ", " + dateOfMonth + " " + monthString[date.getMonth()];
+
+        return dateText;
+    }
+
 
 }
