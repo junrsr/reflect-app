@@ -147,23 +147,46 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
+            <!-- TODO: remove this EditText -->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
                 android:fontFamily="@font/inter_bold"
                 android:textSize="40dp"
+                android:visibility="invisible"
                 android:maxLength="30"
                 android:hint="Title"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:textSize="40dp"
+                android:textColor="@color/white"
+                android:text="Journal"
+                android:id="@+id/journalHeading"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/journalHeading"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/journalSubheading"
+                android:textSize="20dp"
+                android:text="Friday, 09 August"
+                android:layout_marginBottom="20dp"/>
+
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bodyContent"
-                android:hint="Begin typing here"
+                android:hint="Begin typing here..."
                 android:fontFamily="@font/inter"
                 android:textSize="20dp"
-                android:layout_below="@id/title"/>
+                android:layout_below="@id/journalSubheading"/>
         </RelativeLayout>
 
 

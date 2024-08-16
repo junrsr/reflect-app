@@ -37,9 +37,10 @@ public class JournalActivity extends AppCompatActivity {
     private ImageView closeButton;
     private ImageView backButton;
 
-    // input fields
+    // journal
     private EditText journalTitleInput;
     private EditText journalContentInput;
+    private TextView journalSubheading;
 
     // scoring
     private int moodScore;
@@ -92,9 +93,11 @@ public class JournalActivity extends AppCompatActivity {
         slider = findViewById(R.id.slider);
         sliderText = findViewById(R.id.sliderText);
 
-        // input fields
+        // journal fields
         journalTitleInput = findViewById(R.id.title);
         journalContentInput = findViewById(R.id.bodyContent);
+        journalSubheading = findViewById(R.id.journalSubheading);
+        journalSubheading.setText(Utils.getDateString(date)); // sets the date text to the current date
 
         // buttons
         nextButton = findViewById(R.id.nextButton);
@@ -229,11 +232,6 @@ public class JournalActivity extends AppCompatActivity {
         if (journalContent.isEmpty()){
             // display appropriate error message
             Toast.makeText(JournalActivity.this, "Please make sure to write a journal entry", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        else if (journalTitle.length() < 3 || journalTitle.length() > 30){
-            Toast.makeText(this, "Please ensure the title is between 3 and 30 characters long", Toast.LENGTH_SHORT).show();
             return false;
         }
 

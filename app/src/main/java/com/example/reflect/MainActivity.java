@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -29,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private CardView eveningCardView; // the cardview for evening reflection
     private CardView journalCardView; // the cardview for journaling
 
-    TextView dateView; // ui component which displays currently selected date
+    private TextView dateView; // ui component which displays currently selected date
 
     private DatabaseHelper databaseHelper; // the database used to store reflection and journal details
+    private SQLiteDatabase database;
 
 
     /**
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         // display recorded reflection / journal logs from previous entries if it already exists
         setUICards();
+
     }
 
     /**
@@ -86,10 +92,11 @@ public class MainActivity extends AppCompatActivity {
 
         // find the UI component currently storing the date
         dateView = findViewById(R.id.dateView);
-        dateView.setText(getDateString(calendar.getTime()));
+        dateView.setText(Utils.getDateString(calendar.getTime()));
 
         // initialise the database
         databaseHelper = new DatabaseHelper(MainActivity.this);
+        database = databaseHelper.getWritableDatabase();
     }
 
     /**
@@ -101,10 +108,28 @@ public class MainActivity extends AppCompatActivity {
         morningCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // navigate to the morning reflection page
-                Intent intent = new Intent(MainActivity.this, MorningReflectionActivity.class);
-                intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
-                startActivity(intent); // move to the new activity
+                // queries the morning entry table to collect the sleep and motivation scores for entries with matching dates
+                SQLiteDatabase database = databaseHelper.getReadableDatabase();
+                Cursor morningResults = database.query(Utils.MORNING_REFLECTION_TABLE, null, "date = ?", new String[] {"" + calendar.getTime().getTime()}, null, null, null);
+
+                // if the entry hasn't been completed yet
+                if (morningResults.getCount() == 0){
+                    // navigate to the morning reflection page
+                    Intent intent = new Intent(MainActivity.this, MorningReflectionActivity.class);
+                    intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
+                    startActivity(intent); // move to the new activity
+                }
+                // otherwise if it has been completed
+                else{
+                    // navigate to the completed journal entry page
+                    Intent intent = new Intent(MainActivity.this, CompletedMorningReflectionActivity.class);
+                    intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
+                    startActivity(intent); // move to the new activity
+                }
+
+                // close the database
+                database.close();
+
             }
         });
 
@@ -124,10 +149,24 @@ public class MainActivity extends AppCompatActivity {
         journalCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // navigate to the morning reflection page
-                Intent intent = new Intent(MainActivity.this, JournalActivity.class);
-                intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
-                startActivity(intent); // move to the new activity
+                // queries the journal entry table to see if any entries exist
+                SQLiteDatabase database = databaseHelper.getReadableDatabase();
+                Cursor journalResults = database.query(Utils.JOURNAL_TABLE, null, "date = ?", new String[] {"" + calendar.getTime().getTime()}, null, null, null);
+
+                // if the entry hasn't been completed yet
+                if (journalResults.getCount() == 0){
+                    // navigate to the journal entry page
+                    Intent intent = new Intent(MainActivity.this, JournalActivity.class);
+                    intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
+                    startActivity(intent); // move to the new activity
+                }
+                // otherwise if it has been completed
+                else{
+                    // navigate to the completed journal entry page
+                    Intent intent = new Intent(MainActivity.this, CompletedJournalActivity.class);
+                    intent.putExtra("date", calendar.getTime()); // passes the current date through to the next page
+                    startActivity(intent); // move to the new activity
+                }
             }
         });
     }
@@ -154,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                                 calendar.set(Calendar.YEAR, year);
 
                                 // adjust the UI text
-                                String date = getDateString(calendar.getTime());
+                                String date = Utils.getDateString(calendar.getTime());
                                 dateView.setText(date);
 
                                 // reset the ui cards for this new date
@@ -339,32 +378,14 @@ public class MainActivity extends AppCompatActivity {
         contentTextView.setText(content);
 
         // convert the current date into ideal string format
-        String dateText = getDateString(calendar.getTime());
+        String dateText = Utils.getDateString(calendar.getTime());
 
         // display the date
         journalDateTextView.setText(dateText);
 
     }
 
-    /**
-     * method which takes in a date and converts it into the following format: DAYOFWEEK, XX MONTH
-     * @param date the date we want to convert into a string
-     * @return the date in string format
-     */
-    private String getDateString(Date date){
-        // get a list of days of the week
-        String[] dayString = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
-        String[] monthString = {"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
 
-        // calculate the date of the month, adding a 0 if necessary to get it to two digits
-        String dateOfMonth = "" + date.getDate();
-        if (dateOfMonth.length() == 1){
-            dateOfMonth = "0" + dateOfMonth;
-        }
-
-        // return that date converted into a string
-        return dayString[date.getDay()] + ", " + dateOfMonth + " " + monthString[date.getMonth()];
-    }
 
 
 }

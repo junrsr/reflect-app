@@ -81,6 +81,13 @@
         app:layout_constraintTop_toBottomOf="@id/settingsGuideline"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/dateView"
+        android:layout_marginTop="4dp"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <!--________________ REFLECTION TAB ________________-->
     <!-- MORNING REFLECTION -->
@@ -425,6 +432,14 @@
     </androidx.cardview.widget.CardView>
 
     <!--________________ NAVIGATION BAR ________________-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/journalCardView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="5dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
