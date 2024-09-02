@@ -200,7 +200,7 @@ public class MorningReflectionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // navigate back to main activity
                 Intent intent = new Intent(MorningReflectionActivity.this, MainActivity.class);
-                intent.putExtra("date", date); // pass the date so we can move back to that page
+                intent.putExtra("date", date.getTime()); // pass the date so we can move back to that page
                 startActivity(intent);
             }
         });
@@ -244,6 +244,7 @@ public class MorningReflectionActivity extends AppCompatActivity {
 
         // redirect to homepage
         Intent intent = new Intent(MorningReflectionActivity.this, MainActivity.class);
+        intent.putExtra("date", date.getTime()); // pass the date so we can move back to that page
         startActivity(intent);
 
         // close the database

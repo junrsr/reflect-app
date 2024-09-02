@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TrendsFragment">
+
+    <!-- TRENDS TAB -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/tab"
+            app:cardCornerRadius="20dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/moodIcon"
+                    android:src="@drawable/ic_happy"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/moodIcon"
+                    app:layout_constraintBottom_toBottomOf="@id/moodIcon"
+                    app:layout_constraintLeft_toRightOf="@id/moodIcon"
+                    android:layout_marginLeft="8dp"
+                    android:text="Mood"
+                    android:fontFamily="@font/inter_bold"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/moodTrendText"
+                    app:layout_constraintTop_toBottomOf="@id/moodIcon"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textColor="@color/white"
+                    android:text="You're having a better week than you normally do"
+                    android:textSize="18dp"
+                    android:fontFamily="@font/inter"/>
+
+                <View
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/moodUnderline"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/moodTrendText"/>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_width="325dp"
+                    android:layout_height="200dp"
+                    android:id="@+id/moodLineChart"
+                    app:layout_constraintTop_toBottomOf="@id/moodUnderline"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+    </ScrollView>
+
+</FrameLayout>

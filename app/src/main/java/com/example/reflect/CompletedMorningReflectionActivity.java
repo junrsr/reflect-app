@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
@@ -30,7 +32,7 @@ public class CompletedMorningReflectionActivity extends AppCompatActivity {
     private TextView motivationText;
 
     private MaterialButton submitButton;
-
+    private ImageView closeButton;
 
     private Slider sleepSlider;
     private Slider motivationSlider;
@@ -65,15 +67,16 @@ public class CompletedMorningReflectionActivity extends AppCompatActivity {
         int sleepScore = morningResults.getInt(sleepColumn);
         int motivationScore = morningResults.getInt(motivationColumn);
 
-        // set the slider values TODO update
+        // set the slider and text values
         sleepSlider.setValue(sleepScore);
-        motivationText.setText(descriptions[sleepScore - 1]);
+        sleepText.setText(descriptions[sleepScore - 1]);
         motivationSlider.setValue(motivationScore);
-        sleepText.setText(descriptions[motivationScore - 1]);
+        motivationText.setText(descriptions[motivationScore - 1]);
 
         getSliderValue();
 
         checkSubmit();
+        checkClose();
 
     }
 
@@ -95,6 +98,7 @@ public class CompletedMorningReflectionActivity extends AppCompatActivity {
         sleepText = findViewById(R.id.sleepText);
 
         submitButton = findViewById(R.id.submitButton);
+        closeButton = findViewById(R.id.close);
     }
 
     /**
@@ -152,10 +156,25 @@ public class CompletedMorningReflectionActivity extends AppCompatActivity {
 
                 // redirect to homepage
                 Intent intent = new Intent(CompletedMorningReflectionActivity.this, MainActivity.class);
-                intent.putExtra("date", date.getTime());
+                intent.putExtra("date", date);
                 startActivity(intent);
 
 
+            }
+        });
+    }
+
+    /**
+     * closes the current activity and navigates back to the homepage
+     */
+    private void checkClose(){
+        // add an onclick listener to the close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate back to the homepage
+                Intent intent = new Intent(CompletedMorningReflectionActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
